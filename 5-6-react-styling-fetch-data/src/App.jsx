@@ -234,16 +234,16 @@ export default function App() {
      Dependency array MUST be: [searchTerm, users]
      ========================================================= */
   useEffect(() => {
-    // IMPORTANT: autograder expects this exact empty check (no trim)
-    if (searchTerm === "") {
-      setFilteredUsers(users);
-    } else {
-      const filtered = users.filter((user) =>
+  if (!searchTerm) {
+    setFilteredUsers(users);
+  } else {
+    setFilteredUsers(
+      users.filter((user) =>
         user.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      setFilteredUsers(filtered);
-    }
-  }, [searchTerm, users]);
+      )
+    );
+  }
+}, [searchTerm, users]);
 
   // Modal handlers (already complete)
   function handleUserClick(user) {
