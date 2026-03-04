@@ -203,7 +203,27 @@ export default function App() {
      Implement fetch logic inside this useEffect.
      ========================================================= */
   useEffect(() => {
-    // TODO 2.1: Implement fetching users here (see lab instructions)
+    async function fetchUsers() {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const res = await fetch("https://jsonplaceholder.typicode.com/users");
+        if (!res.ok) {
+          throw new Error("HTTP " + res.status);
+        }
+
+        const data = await res.json();
+        setUsers(data);
+        setFilteredUsers(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchUsers();
   }, []);
 
   /* =========================================================
@@ -214,7 +234,16 @@ export default function App() {
      Dependency array MUST be: [searchTerm, users]
      ========================================================= */
   useEffect(() => {
-    // TODO 2.2: Implement filtering users here (see lab instructions)
+    if (!searchTerm.trim()) {
+      setFilteredUsers(users);
+      return;
+    }
+
+    const term = searchTerm.toLowerCase();
+    const filtered = users.filter((u) =>
+      u.name.toLowerCase().includes(term)
+    );
+    setFilteredUsers(filtered);
   }, [searchTerm, users]);
 
   // Modal handlers (already complete)
@@ -231,7 +260,7 @@ export default function App() {
   return (
     <div className="app">
       {/* TODO 1.1: Set header className EXACTLY as in lab instructions */}
-      <header className="">
+      <header className="bg-primary text-white py-3 mb-4 shadow">
         <Container>
           <h1 className="h2 mb-0">User Management Dashboard</h1>
           <p className="mb-0 opacity-75">Search users and view details</p>
@@ -250,15 +279,19 @@ export default function App() {
           <UserList users={filteredUsers} onUserClick={handleUserClick} />
         )}
 
-        <UserModal show={showModal} user={selectedUser} onHide={handleCloseModal} />
+        <UserModal
+          show={showModal}
+          user={selectedUser}
+          onHide={handleCloseModal}
+        />
       </Container>
 
       {/* TODO 1.1: Set footer className EXACTLY as in lab instructions */}
-      <footer className="">
+      <footer className="bg-light py-4 mt-5">
         <Container>
           <small className="text-muted">SWE 363 — React Lab</small>
         </Container>
       </footer>
     </div>
   );
-}
+} 
