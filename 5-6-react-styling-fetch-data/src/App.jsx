@@ -233,18 +233,16 @@ export default function App() {
      Implement filtering logic inside this useEffect.
      Dependency array MUST be: [searchTerm, users]
      ========================================================= */
-  useEffect(() => {
+  useEffect(() =>{
     if (!searchTerm.trim()) {
       setFilteredUsers(users);
-      return;
+    } else {
+      const filtered =users.filter((user) =>
+        user.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredUsers(filtered);
     }
-
-    const term = searchTerm.toLowerCase();
-    const filtered = users.filter((u) =>
-      u.name.toLowerCase().includes(term)
-    );
-    setFilteredUsers(filtered);
-  }, [searchTerm, users]);
+  }, [searchTerm,users]);
 
   // Modal handlers (already complete)
   function handleUserClick(user) {
@@ -294,4 +292,4 @@ export default function App() {
       </footer>
     </div>
   );
-} 
+}
